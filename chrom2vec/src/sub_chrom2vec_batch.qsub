@@ -1,0 +1,21 @@
+#!/bin/bash
+#$ -N chrom2vec
+#$ -cwd
+#$ -j y
+#$ -o logs/chrom2vec.$JOB_ID.log
+#$ -pe smp 24
+#$ -l h_vmem=8G
+#$ -l h_rt=24:00:00
+#$ -m ea
+#$ -M stao@broadinstitute.org
+
+set -euo pipefail
+mkdir -p logs
+
+# conda env
+source /broad/software/free/Linux/redhat_7_x86_64/pkgs/anaconda3_2022.10/etc/profile.d/conda.sh
+conda activate /home/unix/stao/env_all/chromnitron
+
+export SINGULARITY_BINDPATH=/broad/boxialab/sihengtao:/broad/boxialab/sihengtao
+python batch_run.py batch_config.yaml
+

@@ -1,0 +1,50 @@
+pipeline_config:
+  run_name: auto
+  fastq_files: {}
+  output_path: /broad/boxialab/sihengtao/projects/CD4_young_vs_old/chrom2vec_output
+  module_path: /broad/boxialab/sihengtao/chromnitron/chrom2vec/src/Chrom2VecModules
+  resources_path: /broad/boxialab/sihengtao/chromnitron/resources
+  skip_s9: true
+
+singularity_config:
+  use_singularity: 'True'
+  bind_path: /broad/boxialab/sihengtao:/broad/boxialab/sihengtao
+
+resource_config:
+  hisat2_index: alignment_index/hisat2
+  assembly_name: hg38
+  blacklist: blacklist/hg38-blacklist.v2.bed
+  atac_peaks: atac_peaks/cPeaks_hg38.bed
+  atac_non_peaks: atac_peaks/cPeaks_hg38_complement.bed
+  chr_size: chr_sizes
+
+batch_config:
+  srr_list_path: ./srr_list.txt
+  sra_root: /broad/boxialab/sihengtao/projects/CD4_young_vs_old/sra
+  fastq_root: /broad/boxialab/sihengtao/projects/CD4_young_vs_old/fastq
+  temp_root: /broad/boxialab/sihengtao/projects/CD4_young_vs_old/tmp
+  parallel_workers: 3
+  fasterq_threads: 16
+  download_use_singularity: true
+  download_singularity_cmd: singularity
+  download_singularity_image: docker://ncbi/sra-tools:latest
+  download_singularity_bind: /broad/boxialab/sihengtao:/broad/boxialab/sihengtao
+  download_singularity_args: []
+  prefetch_cmd: prefetch
+  prefetch_output_arg: --output-directory
+  fasterq_dump_cmd: fasterq-dump
+  prefetch_args: []
+  fasterq_dump_args: []
+  fasterq_use_gzip: false
+  compress_cmd: pigz
+  compress_args:
+    - -p
+    - "8"
+    - -1
+    - -f
+  skip_s9: false
+  cleanup_after_s8: false
+  delete_fastq: false
+  delete_sra: false
+  keep_dirs:
+    - s8_normalized

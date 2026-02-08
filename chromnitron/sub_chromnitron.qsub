@@ -1,0 +1,24 @@
+#!/bin/bash
+#$ -N chromnitron_infer
+#$ -cwd
+#$ -pe smp 16
+#$ -l h_vmem=16G
+#$ -l h_rt=24:00:00
+#$ -m ea
+#$ -M stao@broadinstitute.org
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LOG_DIR="${SCRIPT_DIR}/logs"
+mkdir -p "$LOG_DIR"
+exec >"${LOG_DIR}/chromnitron_infer.${JOB_ID}.log" 2>&1
+
+cd "$SCRIPT_DIR"
+
+# conda env (Broad)
+source /broad/software/free/Linux/redhat_7_x86_64/pkgs/anaconda3_2022.10/etc/profile.d/conda.sh
+conda activate /home/unix/stao/env_all/chromnitron
+
+
+python inference.py examples/local_config.yaml
